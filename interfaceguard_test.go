@@ -1,9 +1,9 @@
 package interfaceguard_test
 
 import (
-	"interfaceguard"
 	"testing"
 
+	"github.com/jkeys089/interfaceguard"
 	"golang.org/x/tools/go/analysis/analysistest"
 )
 

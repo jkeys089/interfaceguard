@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/jkeys089/interfaceguard"
 	"golang.org/x/tools/go/analysis/singlechecker"
-	"interfaceguard"
 )
 
 const (
