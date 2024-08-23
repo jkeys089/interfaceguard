@@ -1,4 +1,4 @@
-module interfaceguard
+module github.com/jkeys089/interfaceguard
 
 go 1.22
 
