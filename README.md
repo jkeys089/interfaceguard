@@ -5,40 +5,9 @@ Example:
 ```go
 package main
 
-import "fmt"
-
-type Greeter interface {
-	SayHi() string
-}
-
-type CostcoGreeter struct {}
-
-func (c *CostcoGreeter) SayHi() string {
-	return "Welcome to Costco, I love you."
-}
-
-func main() {
-	var greeter Greeter = getCachedCostcoGreeter()
-	
-	if greeter == nil {
-		panic("greeter is nil") // we might expect this to panic, but it doesn't!
-	}
-	
-	fmt.Println("ok")
-}
-
-func getCachedCostcoGreeter() *CostcoGreeter {
-	return nil
-}
-```
-
-This is a safer way to check if an interface is nil:
-```go
-package main
-
 import (
 	"fmt"
-	"reflect"
+	"time"
 )
 
 type Greeter interface {
@@ -52,7 +21,53 @@ func (c *CostcoGreeter) SayHi() string {
 }
 
 func main() {
-	var greeter Greeter = getCachedCostcoGreeter()
+	var greeter Greeter = getCachedGreeter()
+	
+	if greeter == nil {
+		panic("greeter is nil") // we might expect this to panic, but it doesn't!
+	}
+	
+	fmt.Println("ok")
+}
+
+// getCachedGreeter simulates cache miss at runtime and will always return nil *CostcoGreeter
+func getCachedGreeter() Greeter {
+	now := time.Now().Unix()
+
+	switch {
+	case now == 0:
+		return new(CostcoGreeter)
+	case now == 1:
+		return nil
+	default:
+		var c *CostcoGreeter
+		return c
+	}
+}
+```
+
+This is a safer way to check if an interface is nil:
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"time"
+)
+
+type Greeter interface {
+	SayHi() string
+}
+
+type CostcoGreeter struct {}
+
+func (c *CostcoGreeter) SayHi() string {
+	return "Welcome to Costco, I love you."
+}
+
+func main() {
+	var greeter Greeter = getCachedGreeter()
 
 	if isNil(greeter) {
 		panic("greeter is nil") // now we catch the nil greeter and panic as expected
@@ -61,8 +76,19 @@ func main() {
 	fmt.Println("ok")
 }
 
-func getCachedCostcoGreeter() *CostcoGreeter {
-	return nil
+// getCachedGreeter simulates cache miss at runtime and will always return nil *CostcoGreeter
+func getCachedGreeter() Greeter {
+	now := time.Now().Unix()
+
+	switch {
+	case now == 0:
+		return new(CostcoGreeter)
+	case now == 1:
+		return nil
+	default:
+		var c *CostcoGreeter
+		return c
+	}
 }
 
 func isNil(val any) bool {
@@ -88,41 +114,9 @@ What about comparing two interface values to each other:
 ```go
 package main
 
-import "fmt"
-
-type Greeter interface {
-	SayHi() string
-}
-
-type WallyWorldGreeter struct {}
-
-func (w *WallyWorldGreeter) SayHi() string {
-	return "Sorry, folks! We're closed for two weeks to clean and repair America's favorite family fun park. Sorry, uh-huh, uh-huh, uh-huh!"
-}
-
-func main() {
-	var greeterA Greeter
-	var greeterB Greeter = getCachedWallyWorldGreeter()
-	
-	if greeterA == greeterB {
-		panic("greeterA == greeterB") // we might expect this to panic since both are nil, but it doesn't!
-	}
-	
-	fmt.Println("ok")
-}
-
-func getCachedWallyWorldGreeter() *WallyWorldGreeter {
-	return nil
-}
-```
-
-Interface equality checks can be tricky! Here is a safer approach:
-```go
-package main
-
 import (
 	"fmt"
-	"reflect"
+	"time"
 )
 
 type Greeter interface {
@@ -137,7 +131,54 @@ func (w *WallyWorldGreeter) SayHi() string {
 
 func main() {
 	var greeterA Greeter
-	var greeterB Greeter = getCachedWallyWorldGreeter()
+	var greeterB Greeter = getCachedGreeter()
+	
+	if greeterA == greeterB {
+		panic("greeterA == greeterB") // we might expect this to panic since both are nil, but it doesn't!
+	}
+	
+	fmt.Println("ok")
+}
+
+// getCachedGreeter simulates cache miss at runtime and will always return nil *WallyWorldGreeter
+func getCachedGreeter() Greeter {
+	now := time.Now().Unix()
+
+	switch {
+	case now == 0:
+		return new(WallyWorldGreeter)
+	case now == 1:
+		return nil
+	default:
+		var w *WallyWorldGreeter
+		return w
+	}
+}
+```
+
+Interface equality checks can be tricky! Here is a safer approach:
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"time"
+)
+
+type Greeter interface {
+	SayHi() string
+}
+
+type WallyWorldGreeter struct {}
+
+func (w *WallyWorldGreeter) SayHi() string {
+	return "Sorry, folks! We're closed for two weeks to clean and repair America's favorite family fun park. Sorry, uh-huh, uh-huh, uh-huh!"
+}
+
+func main() {
+	var greeterA Greeter
+	var greeterB Greeter = getCachedGreeter()
 
 	if isEqual(greeterA, greeterB) {
 		panic("greeterA == greeterB") // now we see them as equal and panic as expected
@@ -146,8 +187,19 @@ func main() {
 	fmt.Println("ok")
 }
 
-func getCachedWallyWorldGreeter() *WallyWorldGreeter {
-	return nil
+// getCachedGreeter simulates cache miss at runtime and will always return nil *WallyWorldGreeter
+func getCachedGreeter() Greeter {
+	now := time.Now().Unix()
+
+	switch {
+	case now == 0:
+		return new(WallyWorldGreeter)
+	case now == 1:
+		return nil
+	default:
+		var w *WallyWorldGreeter
+		return w
+	}
 }
 
 func isEqual(greeterA, greeterB Greeter) bool {
