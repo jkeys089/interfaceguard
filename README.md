@@ -229,7 +229,8 @@ func isNil(val any) bool {
 }
 ```
 
-## How to use
+## How To Use
+Use it directly via command-line:
 ```shell
 go install github.com/jkeys089/interfaceguard/cmd/interfaceguard@latest
 
@@ -242,3 +243,5 @@ interfaceguard -i ./...
 # disable interface nil comparison checks
 interfaceguard -n ./...
 ```
+
+Or use the golangci-lint plugin (see: [plugin/golangci](plugin/golangci/README.md))
